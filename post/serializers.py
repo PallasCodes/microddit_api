@@ -13,6 +13,7 @@ class PostSerializer(serializers.ModelSerializer):
 						'get_image',
 						'date',
 						'get_user',
+						'get_communitie',
 					)
 
 class CreatePostSerializer(serializers.ModelSerializer):
@@ -24,5 +25,6 @@ class CreatePostSerializer(serializers.ModelSerializer):
 							'post_text',
 							'image',
 							'date',
-							'get_user'
+							'get_user',
+							'communitie'
 						)

@@ -7,6 +7,7 @@ from rest_framework import status, authentication, permissions
 
 from .models import Post
 from .serializers import PostSerializer, CreatePostSerializer
+from communitie.models import Communitie
 
 
 class PublicFeed(APIView):
@@ -27,3 +28,11 @@ class Posts(APIView):
 						serializer.save(user=request.user)
 						return Response(serializer.data, status=status.HTTP_201_CREATED)
 				return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PostsFromCommunitie(APIView):
+		def get(self, request, communitie_pk, format=None):
+				posts = Post.objects.filter(communitie=communitie_pk)
+				serializer = PostSerializer(posts, many=True)
+				return Response(serializer.data)
+
