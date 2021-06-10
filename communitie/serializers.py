@@ -42,10 +42,11 @@ class CommunitieDetailSerializer(serializers.ModelSerializer):
 				model = Communitie
 				fields = (
 						'id',
-						'name',
 						'category',
 						'get_image',
 						'get_absolute_url',
+						'name',
 						'slug',
-						'description'
+						'description',
+						'num_members'
 					)

@@ -21,6 +21,7 @@ class Communitie(models.Model):
 		image = models.ImageField(upload_to='uploads/')
 		slug = models.SlugField()
 		category = models.ForeignKey(Category, related_name="communities", on_delete=models.CASCADE, default=1)
+		num_members = models.IntegerField(default=0)
 
 		class Meta:
 				ordering = ('name',)
@@ -38,3 +39,9 @@ class Communitie(models.Model):
 
 		def get_category(self):
 				return self.category.name
+
+		def increase_members(self):
+				self.num_members += 1
+
+		def decrease_members(self):
+				self.num_members -= 1

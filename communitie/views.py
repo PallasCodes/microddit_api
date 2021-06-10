@@ -1,10 +1,12 @@
 from django.http import Http404
 
+from rest_framework import status, authentication, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
 from .models import Communitie, Category
+from myuser.models import MyUser
 from .serializers  import CommunitieSerializer, CategorySerializer, CategoriesSerializer, CommunitieDetailSerializer
 
 
@@ -33,3 +35,38 @@ class CommunitieDetail(APIView):
 				communitie = Communitie.objects.get(slug=communitie_slug)
 				serializer = CommunitieDetailSerializer(communitie)
 				return Response(serializer.data)
+
+
+@api_view(['POST'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def join_communitie(request):
+	if not request.data["id"]:
+		raise Http404
+	else:
+		communitie = Communitie.objects.get(pk=request.data["id"])
+		serializer = CommunitieDetailSerializer(communitie)
+		user = MyUser.objects.get(user=request.user)
+
+		if communitie in user.communities.all():
+			user.communities.remove(communitie)
+			communitie.decrease_members()
+			communitie.save()
+			user.save()
+			return Response(serializer.data, status=status.HTTP_201_CREATED)
+		else:
+			user.communities.add(communitie)	
+			communitie.increase_members()
+			communitie.save()
+			user.save()
+			return Response(serializer.data)
+
+
+@api_view(['GET'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def get_joined_communities(request):
+	user = MyUser.objects.get(user=request.user)
+	communities = user.communities.all()
+	serializer = CommunitieDetailSerializer(communities, many=True)
+	return Response(serializer.data)
