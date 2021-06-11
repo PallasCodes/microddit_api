@@ -5,8 +5,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework import status, authentication, permissions
 
-from .models import Post, Reaction
-from .serializers import PostSerializer, CreatePostSerializer, ReactionSerializer, AuthPostSerializer
+from .models import Post, Reaction, Comment
+from .serializers import PostSerializer, CreatePostSerializer, ReactionSerializer, AuthPostSerializer, FullPostSerializer, CommentSerializer
 from communitie.models import Communitie
 
 
@@ -15,7 +15,6 @@ class PublicFeed(APIView):
 				posts = Post.objects.all()
 				if request.user.is_authenticated:
 					serializer = AuthPostSerializer(posts, many=True)
-					print(request.user)
 				else:
 					serializer = PostSerializer(posts, many=True)
 				return Response(serializer.data)
@@ -61,6 +60,33 @@ def react_to_post(request):
 		except Exception:	
 			serializer.save(user=request.user)
 		
+		return Response(serializer.data, status.HTTP_201_CREATED)
+
+	return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+
+
+class FullPost(APIView):
+	def get(self, request, post_id ,format=None):
+			post = Post.objects.get(pk=post_id)
+			serializer = FullPostSerializer(post)
+			return Response(serializer.data)
+
+
+class Comments(APIView):
+	def get(self, request, post_id ,format=None):
+			comments = Comment.objects.filter(post=post_id)
+			serializer = CommentSerializer(comments, many=True)
+			return Response(serializer.data)
+
+
+@api_view(['POST'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def comment_post(request):
+	serializer = CommentSerializer(data=request.data)
+
+	if serializer.is_valid():
+		serializer.save(user=request.user)
 		return Response(serializer.data, status.HTTP_201_CREATED)
 
 	return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)

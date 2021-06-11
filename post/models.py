@@ -49,6 +49,15 @@ class Post(models.Model):
 				reactions = Reaction.objects.filter(post=self.pk, reaction=False) 
 				return len(reactions)
 
+		def get_num_comments(self):
+				comments = Comment.objects.filter(post=self.pk)
+				return len(comments)
+
+		def get_comments(self):
+				comments = Comment.objects.filter(post=self.pk)
+				return comments
+
+
 
 class Reaction(models.Model):
 	user = models.ForeignKey(User, related_name='likes', on_delete=models.CASCADE)
@@ -57,3 +66,20 @@ class Reaction(models.Model):
 
 	def __str__(self):
 		return f'{self.user.username} {self.reaction} on "{self.post.title}"'
+
+
+class Comment(models.Model):
+	user = models.ForeignKey(User, related_name='comments_post', on_delete=models.CASCADE)
+	post = models.ForeignKey(Post, related_name='post_comment', on_delete=models.CASCADE)
+	comment = models.TextField()
+	date = models.DateTimeField(auto_now_add=True)
+
+	def __str__(self):
+		return f'{self.user.username} on "{self.post.title}"'
+
+	class Meta:
+		ordering = ('-date',)
+
+	def get_user(self):
+		return self.user.username
+
