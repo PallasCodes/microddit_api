@@ -38,21 +38,16 @@ class Post(models.Model):
 
 			if reaction.reaction == True:
 				return True
-			return False
+			elif reaction.reaction == False:
+				return False
 
 		def get_likes(self):
-			try:
 				reactions = Reaction.objects.filter(post=self.pk, reaction=True) 
 				return len(reactions)
-			except Exception:
-				return 0
 
 		def get_dislikes(self):
-			try:
 				reactions = Reaction.objects.filter(post=self.pk, reaction=False) 
 				return len(reactions)
-			except Exception:
-				return 0
 
 
 class Reaction(models.Model):

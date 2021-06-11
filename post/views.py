@@ -51,7 +51,6 @@ def react_to_post(request):
 		try:
 			reaction = Reaction.objects.get(user=request.user, post=request.data['post'])
 			if reaction.reaction == request.data['reaction']:
-				print('uwu')
 				reaction.reaction = None
 			else:
 				reaction.reaction = not reaction.reaction
@@ -61,7 +60,6 @@ def react_to_post(request):
 
 		except Exception:	
 			serializer.save(user=request.user)
-			print(Exception)
 		
 		return Response(serializer.data, status.HTTP_201_CREATED)
 
