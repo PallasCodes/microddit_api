@@ -2,18 +2,22 @@ from django.http import Http404
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.decorators import api_view 
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework import status, authentication, permissions
 
-from .models import Post
-from .serializers import PostSerializer, CreatePostSerializer
+from .models import Post, Reaction
+from .serializers import PostSerializer, CreatePostSerializer, ReactionSerializer, AuthPostSerializer
 from communitie.models import Communitie
 
 
 class PublicFeed(APIView):
 		def get(self, request, format=None):
 				posts = Post.objects.all()
-				serializer = PostSerializer(posts, many=True)
+				if request.user.is_authenticated:
+					serializer = AuthPostSerializer(posts, many=True)
+					print(request.user)
+				else:
+					serializer = PostSerializer(posts, many=True)
 				return Response(serializer.data)
 
 
@@ -36,3 +40,29 @@ class PostsFromCommunitie(APIView):
 				serializer = PostSerializer(posts, many=True)
 				return Response(serializer.data)
 
+
+@api_view(['POST'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def react_to_post(request):
+	serializer = ReactionSerializer(data=request.data)
+
+	if serializer.is_valid():
+		try:
+			reaction = Reaction.objects.get(user=request.user, post=request.data['post'])
+			if reaction.reaction == request.data['reaction']:
+				print('uwu')
+				reaction.reaction = None
+			else:
+				reaction.reaction = not reaction.reaction
+			reaction.save()
+			serializer_response = ReactionSerializer(reaction)
+			return Response(serializer_response.data, status.HTTP_201_CREATED)
+
+		except Exception:	
+			serializer.save(user=request.user)
+			print(Exception)
+		
+		return Response(serializer.data, status.HTTP_201_CREATED)
+
+	return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)

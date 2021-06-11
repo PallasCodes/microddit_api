@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Post
+from .models import Post, Reaction
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -16,6 +16,24 @@ class PostSerializer(serializers.ModelSerializer):
 						'get_communitie',
 					)
 
+
+class AuthPostSerializer(serializers.ModelSerializer):
+		class Meta:
+				model = Post
+				fields = (
+						'id',
+						'title',
+						'post_text',
+						'get_image',
+						'date',
+						'get_user',
+						'get_communitie',
+						'get_reaction',
+						'get_likes',
+						'get_dislikes',
+					)
+
+
 class CreatePostSerializer(serializers.ModelSerializer):
 			class Meta:
 					model = Post
@@ -26,5 +44,14 @@ class CreatePostSerializer(serializers.ModelSerializer):
 							'image',
 							'date',
 							'get_user',
-							'communitie'
+							'communitie',
 						)
+
+
+class ReactionSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Reaction
+		fields = (
+			'post',
+			'reaction'
+		)

@@ -29,3 +29,36 @@ class Post(models.Model):
 				if(self.communitie):
 						return self.communitie.slug
 				return ''
+
+		def get_reaction(self):
+			try:
+				reaction = Reaction.objects.get(user=self.user, post=self.pk) 
+			except Exception:
+				return None
+
+			if reaction.reaction == True:
+				return True
+			return False
+
+		def get_likes(self):
+			try:
+				reactions = Reaction.objects.filter(post=self.pk, reaction=True) 
+				return len(reactions)
+			except Exception:
+				return 0
+
+		def get_dislikes(self):
+			try:
+				reactions = Reaction.objects.filter(post=self.pk, reaction=False) 
+				return len(reactions)
+			except Exception:
+				return 0
+
+
+class Reaction(models.Model):
+	user = models.ForeignKey(User, related_name='likes', on_delete=models.CASCADE)
+	post = models.ForeignKey(Post, related_name='post', on_delete=models.CASCADE)
+	reaction = models.BooleanField(blank=True, null=True)
+
+	def __str__(self):
+		return f'{self.user.username} {self.reaction} on "{self.post.title}"'
