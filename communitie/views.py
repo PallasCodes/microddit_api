@@ -1,4 +1,5 @@
 from django.http import Http404
+from django.contrib.auth.models import User
 
 from rest_framework import status, authentication, permissions
 from rest_framework.views import APIView
@@ -62,11 +63,10 @@ def join_communitie(request):
 			return Response(serializer.data)
 
 
-@api_view(['GET'])
-@authentication_classes([authentication.TokenAuthentication])
-@permission_classes([permissions.IsAuthenticated])
-def get_joined_communities(request):
-	user = MyUser.objects.get(user=request.user)
-	communities = user.communities.all()
-	serializer = CommunitieDetailSerializer(communities, many=True)
-	return Response(serializer.data)
+class JoinedCommunities(APIView):
+	def get(self, request, username, format=None):
+		user = User.objects.get(username=username)
+		profile = MyUser.objects.get(user=user)
+		communities = profile.communities.all()
+		serializer = CommunitieDetailSerializer(communities, many=True)
+		return Response(serializer.data)

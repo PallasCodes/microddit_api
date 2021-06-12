@@ -22,6 +22,7 @@ class Communitie(models.Model):
 		slug = models.SlugField()
 		category = models.ForeignKey(Category, related_name="communities", on_delete=models.CASCADE, default=1)
 		num_members = models.IntegerField(default=0)
+		icon = models.CharField(max_length=50, null=True, blank=True)
 
 		class Meta:
 				ordering = ('name',)
@@ -32,7 +33,7 @@ class Communitie(models.Model):
 		def get_image(self):
 				if(self.image):
 						return 'http://127.0.0.1:8000' + self.image.url
-				return ''
+				return None
 
 		def get_absolute_url(self):
 				return f'/{self.category.slug}/{self.slug}/'

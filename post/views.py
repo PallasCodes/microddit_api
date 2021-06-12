@@ -1,4 +1,5 @@
 from django.http import Http404
+from django.contrib.auth.models import User
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -90,3 +91,11 @@ def comment_post(request):
 		return Response(serializer.data, status.HTTP_201_CREATED)
 
 	return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+
+
+class PostsFromProfile(APIView):
+	def get(self, request, username, format=None):
+			user = User.objects.get(username=username)
+			posts = Post.objects.filter(user=user)
+			serializer = PostSerializer(posts, many=True)
+			return Response(serializer.data)
