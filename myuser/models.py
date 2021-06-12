@@ -6,7 +6,7 @@ from communitie.models import Communitie
 class MyUser(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	name = models.CharField(max_length=35, blank=True, null=True)
-	profile_image = models.ImageField(upload_to='uploads/', blank=True, null=True)
+	profile_image = models.ImageField(upload_to='uploads/', default='uploads/default.png')
 	cover_image = models.ImageField(upload_to='uploads/', blank=True, null=True)
 	bio_description = models.TextField(blank=True, null=True)
 	communities = models.ManyToManyField(Communitie, blank=True)

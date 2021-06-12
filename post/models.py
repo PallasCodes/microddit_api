@@ -57,6 +57,11 @@ class Post(models.Model):
 				comments = Comment.objects.filter(post=self.pk)
 				return comments
 
+		def get_communitie_url(self):
+			if self.communitie:
+					communitie = Communitie.objects.get(pk=self.communitie.id)
+					return communitie.get_absolute_url()
+			return None
 
 
 class Reaction(models.Model):

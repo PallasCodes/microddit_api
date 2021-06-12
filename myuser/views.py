@@ -16,3 +16,40 @@ class MyUserDetail(APIView):
 		profile = MyUser.objects.get(user=user)
 		serializer = MyUserSerializer(profile)
 		return Response(serializer.data)
+
+
+@api_view(['POST'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def create_profile(request):
+		profile = MyUser(user=request.user,name=request.data['username'])
+		profile.save()
+		serializer = MyUserSerializer(profile)
+		return Response(serializer.data, status.HTTP_201_CREATED)
+
+
+@api_view(['POST'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def follow_or_unfollow(request):
+		followed_user = User.objects.get(username=request.data['username'])
+		user = MyUser.objects.get(user=request.user)
+		if followed_user in user.friends.all():
+			user.friends.remove(followed_user)
+			return Response("user deleted")
+		else:
+			serializer = MyUserSerializer(followed_user)
+			user.friends.add(followed_user)
+			return Response(serializer.data, status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def get_followed(request):
+		user = MyUser.objects.get(user=request.user)
+		followed = []
+		for friend in user.friends.all():
+			followed.append(User.objects.get(pk=friend.id))
+		serializer = MyUserSerializer(followed, many=True)
+		return Response(serializer.data)

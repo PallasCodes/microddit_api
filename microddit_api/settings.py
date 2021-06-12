@@ -70,6 +70,8 @@ REST_FRAMEWORK = {
 ),
 }
 
+CSRF_HEADER_NAME = 'HTTP_X_CSRFTOKEN'
+
 ROOT_URLCONF = 'microddit_api.urls'
 
 TEMPLATES = [

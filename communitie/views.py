@@ -51,13 +51,13 @@ def join_communitie(request):
 
 		if communitie in user.communities.all():
 			user.communities.remove(communitie)
-			communitie.decrease_members()
+			communitie.num_members -= 1
 			communitie.save()
 			user.save()
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
 		else:
 			user.communities.add(communitie)	
-			communitie.increase_members()
+			communitie.num_members += 1
 			communitie.save()
 			user.save()
 			return Response(serializer.data)

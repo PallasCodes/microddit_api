@@ -10,7 +10,8 @@ class CommunitieSerializer(serializers.ModelSerializer):
 						'id',
 						'name',
 						'get_image',
-						'get_absolute_url'
+						'get_absolute_url',
+						'icon'
 					)
 
 
@@ -48,5 +49,6 @@ class CommunitieDetailSerializer(serializers.ModelSerializer):
 						'name',
 						'slug',
 						'description',
-						'num_members'
+						'num_members',
+						'icon'
 					)
