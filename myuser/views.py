@@ -53,3 +53,17 @@ def get_followed(request):
 			followed.append(User.objects.get(pk=friend.id))
 		serializer = MyUserSerializer(followed, many=True)
 		return Response(serializer.data)
+
+
+@api_view(['PUT'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def update_profile(request):
+		serializer = MyUserSerializer(data=request.data)
+
+		if serializer.is_valid():
+			profile = MyUser.objects.get(user=request.user)
+			profile.bio_description = request.data["bio_description"]
+			profile.name = request.data["name"]
+			profile.save()
+			return Response(serializer.data)

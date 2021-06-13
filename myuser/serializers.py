@@ -7,7 +7,6 @@ class MyUserSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = MyUser
 		fields = (
-				'id',
 				'get_username',
 				'get_profile_image',
 				'get_cover_image',
