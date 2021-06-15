@@ -66,8 +66,15 @@ class Post(models.Model):
 
 		def get_description(self):
 			if self.image:
-				return self.post_text[:200] + '...'
-			return self.post_text[:500] + '...'
+				if len(self.post_text) > 200:
+					return self.post_text[:200] + '...'
+				else:
+					return self.post_text[:200]
+
+			elif len(self.post_text) > 500:
+				return self.post_text[:500] + '...'
+			else:
+				return self.post_text
 
 		def get_user_image(self):
 			user = MyUser.objects.get(user=self.user)

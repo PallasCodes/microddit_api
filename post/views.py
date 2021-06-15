@@ -13,6 +13,7 @@ from .models import Post, Reaction, Comment
 from .serializers import PostSerializer, CreatePostSerializer, ReactionSerializer, AuthPostSerializer, FullPostSerializer, CommentSerializer
 from communitie.models import Communitie
 from myuser.models import MyUser
+from .forms import PostForm
 
 
 class PublicFeed(APIView):
@@ -47,13 +48,16 @@ class Posts(APIView):
 		permission_classes = [permissions.IsAuthenticated]
 
 		def post(self, request, format=None):
-				serializer = CreatePostSerializer(data=request.data)
-
-				if(serializer.is_valid()):
-						serializer.save(user=request.user)
-						return Response(serializer.data, status=status.HTTP_201_CREATED)
-				return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+				post = Post(user=request.user, title=request.data['title'], post_text=request.data['post_text'])
+				try:
+					image = request.FILES['image']
+					post.image = image
+				except:
+					print('no image')
+				post.save()
+				serializer = FullPostSerializer(post)
+				return Response(serializer.data, status=status.HTTP_201_CREATED)
+			
 
 class PostsFromCommunitie(APIView):
 		def get(self, request, communitie_pk, format=None):
