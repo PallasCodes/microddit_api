@@ -78,3 +78,10 @@ class SearchCommunitie(APIView):
 	  		communities = Communitie.objects.filter(Q(name__icontains=query))
 	  		serializer = CommunitieDetailSerializer(communities, many=True)
 	  		return Response(serializer.data)
+
+
+class TopCommunities(APIView):
+	def get(self, request, format=None):
+		communities = Communitie.objects.all().order_by('-num_members')[:10]
+		serializer = CommunitieDetailSerializer(communities, many=True)
+		return Response(serializer.data)

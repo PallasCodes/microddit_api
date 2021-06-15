@@ -19,7 +19,8 @@ class PostSerializer(serializers.ModelSerializer):
 						'get_dislikes',
 						'get_num_comments',
 						'get_communitie_url',
-						'get_description'
+						'get_description',
+						'get_user_image',
 					)
 
 
@@ -39,7 +40,8 @@ class AuthPostSerializer(serializers.ModelSerializer):
 						'get_dislikes',
 						'get_num_comments',
 						'get_communitie_url',
-						'get_description'
+						'get_description',
+						'get_user_image',
 					)
 
 
@@ -54,6 +56,11 @@ class CreatePostSerializer(serializers.ModelSerializer):
 							'date',
 							'get_user',
 							'communitie',
+							'get_user_image',
+							'get_reaction',
+							'get_likes',
+							'get_dislikes',
+							'get_num_comments',
 						)
 
 
@@ -75,6 +82,7 @@ class CommentSerializer(serializers.ModelSerializer):
 			'get_user',
 			'comment',
 			'date',
+			'get_user_image',
 			)
 
 
@@ -94,4 +102,5 @@ class FullPostSerializer(serializers.ModelSerializer):
 						'get_dislikes',
 						'get_num_comments',
 						'get_communitie_url',
+						'get_user_image',
 					)

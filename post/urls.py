@@ -5,6 +5,7 @@ from post import views
 
 urlpatterns = [
 		path('public-feed/', views.PublicFeed.as_view()),
+		path('posts/all/', views.AllPosts.as_view()),
 		path('posts/', views.Posts.as_view()),
 		path('posts/delete/<int:post_id>/', views.delete_post),
 		path('posts/search/<str:query>/', views.SearchPost.as_view()),

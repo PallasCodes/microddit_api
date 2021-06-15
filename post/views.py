@@ -32,6 +32,15 @@ class PublicFeed(APIView):
 				return Response(serializer.data)
 
 
+class AllPosts(APIView):
+	def get(self, request, format=None):
+		paginator = PageNumberPagination()
+		posts = Post.objects.all()
+		page = paginator.paginate_queryset(posts, request)
+		serializer = PostSerializer(page, many=True)
+		return Response(serializer.data)
+
+
 class Posts(APIView):
 		authentication_classes = [authentication.TokenAuthentication]
 		permission_classes = [permissions.IsAuthenticated]

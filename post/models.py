@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from communitie.models import Communitie
+from myuser.models import MyUser
 
 
 class Post(models.Model):
@@ -68,6 +69,10 @@ class Post(models.Model):
 				return self.post_text[:200]
 			return self.post_text[:500]
 
+		def get_user_image(self):
+			user = MyUser.objects.get(user=self.user)
+			return user.get_profile_image()
+
 
 class Reaction(models.Model):
 	user = models.ForeignKey(User, related_name='likes', on_delete=models.CASCADE)
@@ -93,3 +98,6 @@ class Comment(models.Model):
 	def get_user(self):
 		return self.user.username
 
+	def get_user_image(self):
+			user = MyUser.objects.get(user=self.user)
+			return user.get_profile_image()
