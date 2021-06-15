@@ -1,5 +1,6 @@
 from django.http import Http404
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 from rest_framework import status, authentication, permissions
 from rest_framework.views import APIView
@@ -70,3 +71,10 @@ class JoinedCommunities(APIView):
 		communities = profile.communities.all()
 		serializer = CommunitieDetailSerializer(communities, many=True)
 		return Response(serializer.data)
+
+
+class SearchCommunitie(APIView):
+		def get(self, request, query, format=None):
+	  		communities = Communitie.objects.filter(Q(name__icontains=query))
+	  		serializer = CommunitieDetailSerializer(communities, many=True)
+	  		return Response(serializer.data)

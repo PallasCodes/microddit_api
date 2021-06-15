@@ -19,6 +19,7 @@ class PostSerializer(serializers.ModelSerializer):
 						'get_dislikes',
 						'get_num_comments',
 						'get_communitie_url',
+						'get_description'
 					)
 
 
@@ -38,6 +39,7 @@ class AuthPostSerializer(serializers.ModelSerializer):
 						'get_dislikes',
 						'get_num_comments',
 						'get_communitie_url',
+						'get_description'
 					)
 
 

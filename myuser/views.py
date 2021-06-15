@@ -1,5 +1,6 @@
 from django.http import Http404
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -67,3 +68,11 @@ def update_profile(request):
 			profile.name = request.data["name"]
 			profile.save()
 			return Response(serializer.data)
+
+
+class SearchUser(APIView):
+		def get(self, request, query, format=None):
+	  		users = MyUser.objects.filter(Q(name__icontains=query))
+	  		serializer = MyUserSerializer(users, many=True)
+	  		return Response(serializer.data)
+

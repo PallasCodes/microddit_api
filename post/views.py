@@ -1,23 +1,34 @@
 from django.http import Http404
 from django.contrib.auth.models import User
+from django.db.models import Q
+from django.core.paginator import Paginator
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework import status, authentication, permissions
+from rest_framework.pagination import PageNumberPagination
 
 from .models import Post, Reaction, Comment
 from .serializers import PostSerializer, CreatePostSerializer, ReactionSerializer, AuthPostSerializer, FullPostSerializer, CommentSerializer
 from communitie.models import Communitie
+from myuser.models import MyUser
 
 
 class PublicFeed(APIView):
 		def get(self, request, format=None):
-				posts = Post.objects.all()
+				paginator = PageNumberPagination()
 				if request.user.is_authenticated:
-					serializer = AuthPostSerializer(posts, many=True)
+					user = MyUser.objects.get(user=request.user)
+					friends = user.friends.all()
+					communities = user.communities.all()
+					posts = Post.objects.filter(Q(user_id__in=friends) | Q(communitie_id__in=communities) | Q(user_id=request.user))
+					page = paginator.paginate_queryset(posts, request)
+					serializer = AuthPostSerializer(page, many=True)
 				else:
-					serializer = PostSerializer(posts, many=True)
+					posts = Post.objects.all()
+					page = paginator.paginate_queryset(posts, request)
+					serializer = PostSerializer(page, many=True)
 				return Response(serializer.data)
 
 
@@ -94,8 +105,28 @@ def comment_post(request):
 
 
 class PostsFromProfile(APIView):
-	def get(self, request, username, format=None):
-			user = User.objects.get(username=username)
-			posts = Post.objects.filter(user=user)
-			serializer = PostSerializer(posts, many=True)
-			return Response(serializer.data)
+		def get(self, request, username, format=None):
+				user = User.objects.get(username=username)
+				posts = Post.objects.filter(user=user)
+				serializer = PostSerializer(posts, many=True)
+				return Response(serializer.data)
+
+
+class SearchPost(APIView):
+		def get(self, request, query, format=None):
+	  		posts = Post.objects.filter(Q(title__icontains=query))
+	  		serializer = PostSerializer(posts, many=True)
+	  		return Response(serializer.data)
+
+
+@api_view(['DELETE'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def delete_post(request, post_id):
+		post = Post.objects.get(pk=post_id)
+
+		if post.user != request.user:
+			return Response("This user can't delete this post", status.HTTP_403_FORBIDDEN)
+
+		post.delete()
+		return Response('Post deleted')

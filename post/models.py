@@ -63,6 +63,11 @@ class Post(models.Model):
 					return communitie.get_absolute_url()
 			return None
 
+		def get_description(self):
+			if self.image:
+				return self.post_text[:200]
+			return self.post_text[:500]
+
 
 class Reaction(models.Model):
 	user = models.ForeignKey(User, related_name='likes', on_delete=models.CASCADE)
