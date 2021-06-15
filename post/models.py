@@ -66,8 +66,8 @@ class Post(models.Model):
 
 		def get_description(self):
 			if self.image:
-				return self.post_text[:200]
-			return self.post_text[:500]
+				return self.post_text[:200] + '...'
+			return self.post_text[:500] + '...'
 
 		def get_user_image(self):
 			user = MyUser.objects.get(user=self.user)

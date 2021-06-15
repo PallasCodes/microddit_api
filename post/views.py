@@ -26,7 +26,8 @@ class PublicFeed(APIView):
 					page = paginator.paginate_queryset(posts, request)
 					serializer = AuthPostSerializer(page, many=True)
 				else:
-					posts = Post.objects.all()
+					communities = Communitie.objects.all()
+					posts = Post.objects.filter(Q(communitie_id__in=communities))
 					page = paginator.paginate_queryset(posts, request)
 					serializer = PostSerializer(page, many=True)
 				return Response(serializer.data)
