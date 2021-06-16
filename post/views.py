@@ -49,20 +49,28 @@ class Posts(APIView):
 
 		def post(self, request, format=None):
 				post = Post(user=request.user, title=request.data['title'], post_text=request.data['post_text'])
+				try: 
+					request.data['communitie']
+					communitie = Communitie.objects.get(pk=request.data['communitie'])
+					post.communitie = communitie
+				except:
+					pass
 				try:
 					image = request.FILES['image']
 					post.image = image
 				except:
-					print('no image')
+					pass
 				post.save()
-				serializer = FullPostSerializer(post)
+				serializer = CreatePostSerializer(post)
 				return Response(serializer.data, status=status.HTTP_201_CREATED)
 			
 
 class PostsFromCommunitie(APIView):
 		def get(self, request, communitie_pk, format=None):
+				paginator = PageNumberPagination()
 				posts = Post.objects.filter(communitie=communitie_pk)
-				serializer = PostSerializer(posts, many=True)
+				page = paginator.paginate_queryset(posts, request)
+				serializer = PostSerializer(page, many=True)
 				return Response(serializer.data)
 
 
@@ -120,9 +128,11 @@ def comment_post(request):
 
 class PostsFromProfile(APIView):
 		def get(self, request, username, format=None):
+				paginator = PageNumberPagination()
 				user = User.objects.get(username=username)
 				posts = Post.objects.filter(user=user)
-				serializer = PostSerializer(posts, many=True)
+				page = paginator.paginate_queryset(posts, request)
+				serializer = PostSerializer(page, many=True)
 				return Response(serializer.data)
 
 

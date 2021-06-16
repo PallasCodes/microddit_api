@@ -60,14 +60,20 @@ def get_followed(request):
 @authentication_classes([authentication.TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 def update_profile(request):
-		serializer = MyUserSerializer(data=request.data)
-
-		if serializer.is_valid():
-			profile = MyUser.objects.get(user=request.user)
-			profile.bio_description = request.data["bio_description"]
-			profile.name = request.data["name"]
-			profile.save()
-			return Response(serializer.data)
+	profile = MyUser.objects.get(user=request.user)
+	profile.bio_description = request.data["bio_description"]
+	profile.name = request.data["name"]
+	try:
+		profile.profile_image = request.FILES['profile_image']
+	except:
+		pass
+	try:
+		profile.cover_image = request.FILES['cover_image']
+	except:
+		pass
+	profile.save()
+	serializer = MyUserSerializer(profile)
+	return Response(serializer.data)
 
 
 class SearchUser(APIView):

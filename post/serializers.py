@@ -62,7 +62,10 @@ class CreatePostSerializer(serializers.ModelSerializer):
 							'get_dislikes',
 							'get_num_comments',
 							'get_description',
-							'image'
+							'get_communitie',
+							'get_communitie_url',
+							'image',
+							'get_image'
 						)
 
 
