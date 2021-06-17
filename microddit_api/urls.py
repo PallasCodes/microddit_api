@@ -11,4 +11,4 @@ urlpatterns = [
     path('api/v1/', include('post.urls')),
     path('api/v1/communities/', include('communitie.urls')),
     path('api/v1/', include('myuser.urls')),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

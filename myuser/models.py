@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from communitie.models import Communitie
+from django.conf import settings
 
 
 class MyUser(models.Model):
@@ -17,12 +18,12 @@ class MyUser(models.Model):
 
 	def get_profile_image(self):
 		if(self.profile_image):
-			return 'http://127.0.0.1:8000' + self.profile_image.url
+			return settings.URI + self.profile_image.url
 		return None
 
 	def get_cover_image(self):
 		if(self.cover_image):
-			return 'http://127.0.0.1:8000' + self.cover_image.url
+			return settings.URI + self.cover_image.url
 		return None
 
 	def get_username(self):

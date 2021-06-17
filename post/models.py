@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from communitie.models import Communitie
 from myuser.models import MyUser
+from django.conf import settings
 
 
 class Post(models.Model):
@@ -20,8 +21,8 @@ class Post(models.Model):
 
 		def get_image(self):
 			if(self.image):
-					return 'http://127.0.0.1:8000' + self.image.url
-			return ''
+					return settings.URI + self.image.url
+			return None
 
 		def get_user(self):
 				return self.user.username

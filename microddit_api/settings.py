@@ -16,6 +16,8 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
+URI = "https://microddit-api.heroku.app"
+
 
 # Application definition
 
@@ -39,11 +41,12 @@ INSTALLED_APPS = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080", "http://192.168.1.71:8081", "http://127.0.0.1:8080",
-    "http://192.168.1.69:8080", 'https://microddit.netlify.app',
+    "http://192.168.1.69:8080", 'https://microddit.netlify.app', 'https://microddit.ml'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -51,7 +54,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 REST_FRAMEWORK = {
@@ -89,13 +91,15 @@ WSGI_APPLICATION = 'microddit_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': BASE_DIR / 'db.sqlite3',
-#    }
-# }
+"""
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
+"""
 import dj_database_url
 from decouple import config
 
