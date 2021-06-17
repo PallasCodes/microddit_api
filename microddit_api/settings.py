@@ -16,12 +16,14 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
-URI = "https://microddit-api.heroku.app"
+URI = "https://microddit-api.herokuapp.com"
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
