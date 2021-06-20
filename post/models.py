@@ -10,8 +10,9 @@ class Post(models.Model):
 		communitie = models.ForeignKey(Communitie, related_name='groups', on_delete=models.CASCADE, blank=True, null=True)
 		title = models.CharField(max_length=300)
 		post_text = models.TextField()
-		image = models.ImageField(upload_to='uploads/', blank=True, null=True)
+		#image = models.ImageField(upload_to='uploads/', blank=True, null=True)
 		date = models.DateTimeField(auto_now_add=True)
+		image_url = models.CharField(max_length=350, blank=True, null=True)
 
 		class Meta:
 				ordering = ('-date',)
@@ -20,8 +21,8 @@ class Post(models.Model):
 				return self.title
 
 		def get_image(self):
-			if(self.image):
-					return settings.URI + self.image.url
+			if(self.image_url):
+					return self.image_url
 			return None
 
 		def get_user(self):
@@ -66,7 +67,7 @@ class Post(models.Model):
 			return None
 
 		def get_description(self):
-			if self.image:
+			if self.image_url:
 				if len(self.post_text) > 200:
 					return self.post_text[:200] + '...'
 				else:

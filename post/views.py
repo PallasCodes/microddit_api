@@ -56,8 +56,7 @@ class Posts(APIView):
 				except:
 					pass
 				try:
-					image = request.FILES['image']
-					post.image = image
+					post.image_url = request.data['image']
 				except:
 					pass
 				post.save()

@@ -52,7 +52,7 @@ class CreatePostSerializer(serializers.ModelSerializer):
 							'id',
 							'title',
 							'post_text',
-							'image',
+							'image_url',
 							'date',
 							'get_user',
 							'communitie',
@@ -64,7 +64,6 @@ class CreatePostSerializer(serializers.ModelSerializer):
 							'get_description',
 							'get_communitie',
 							'get_communitie_url',
-							'image',
 							'get_image'
 						)
 

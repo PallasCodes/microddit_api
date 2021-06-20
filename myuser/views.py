@@ -64,11 +64,11 @@ def update_profile(request):
 	profile.bio_description = request.data["bio_description"]
 	profile.name = request.data["name"]
 	try:
-		profile.profile_image = request.FILES['profile_image']
+		profile.profile_image_url = request.data['profile_image']
 	except:
 		pass
 	try:
-		profile.cover_image = request.FILES['cover_image']
+		profile.cover_image_url = request.data['cover_image']
 	except:
 		pass
 	profile.save()
