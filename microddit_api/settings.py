@@ -16,8 +16,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-URI = "https://microddit-api.herokuapp.com"
-#URI = "http://localhost:8000"
+#URI = "https://microddit-api.herokuapp.com"
+URI = "http://localhost:8000"
 
 
 # Application definition
@@ -95,7 +95,7 @@ WSGI_APPLICATION = 'microddit_api.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 
-"""
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -112,6 +112,7 @@ DATABASES = {
         default=config('DATABASE_URL')
         )
 }
+"""
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
